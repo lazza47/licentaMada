@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Administrator extends UtilizatorSimplu implements Serializable {
-
+	// test
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Exemplar> cartiImprumutate = new ArrayList<Exemplar>();
 
