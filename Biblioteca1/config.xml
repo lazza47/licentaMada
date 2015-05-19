@@ -1,8 +1,0 @@
-<config>
-<datafile>database.ser</datafile>
-<guest property="name">guest</guest>
-<guest property="password">guest</guest>
-<admin property="name">admin</admin>
-<admin property="password">admin</admin>
-<expire property="expire">1000000</expire>
-</config>
