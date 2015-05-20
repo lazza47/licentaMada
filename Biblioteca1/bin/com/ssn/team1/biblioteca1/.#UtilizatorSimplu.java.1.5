@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2014 SSI Schaefer Noell GmbH
+ *
+ * $Header: /data/cvs/Scolarizare/Team1/Biblioteca1/src/com/ssn/team1/biblioteca1/UtilizatorSimplu.java,v 1.5 2014/04/08 08:00:41 cfiser Exp $
+ */
+
+package com.ssn.team1.biblioteca1;
+
+import java.util.ArrayList;
+
+/**
+ * @author <a href="mailto:amarine@ssi-schaefer-noell.com">amarine</a>
+ * @version $Revision: 1.5 $, $Date: 2014/04/08 08:00:41 $, $Author: cfiser $
+ */
+
+public abstract class UtilizatorSimplu extends Utilizator {
+<<<<<<< UtilizatorSimplu.java
+  private String nume;
+  private String numarTelefon;
+  private ArrayList<Exemplar> cartiImprumutate;
+  private int numarDeImprumuturi;
+=======
+  protected String nume;
+  protected String numarTelefon;
+  protected ArrayList<Imprumut> istoricImprumuturi;
+  protected ArrayList<Exemplar> cartiImprumutate;
+  protected int numarDeImprumuturi;
+>>>>>>> 1.4
+
+  public ArrayList<Exemplar> getCartiImprumutate() {
+
+    return cartiImprumutate;
+  }
+
+  public boolean areCartiNereturnate() {
+    return false;
+  }
+
+<<<<<<< UtilizatorSimplu.java
+    for (Exemplar e : cartiImprumutate) {
+      if (e.isTermenDepasit()) {
+        return true;
+      }
+    }
+=======
+  public String getNume() {
+    return nume;
+  }
+>>>>>>> 1.5
+
+  public void setNume(String nume) {
+    this.nume = nume;
+  }
+
+}

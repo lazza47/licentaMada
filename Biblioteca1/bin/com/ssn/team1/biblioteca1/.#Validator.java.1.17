@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2014 SSI Schaefer Noell GmbH
+ *
+ * $Header: /data/cvs/Scolarizare/Team1/Biblioteca1/src/com/ssn/team1/biblioteca1/Validator.java,v 1.17 2014/04/11 04:17:23 cfiser Exp $
+ */
+
+package com.ssn.team1.biblioteca1;
+
+import java.io.Serializable;
+
+/**
+ * @author <a href="mailto:llazare@ssi-schaefer-noell.com">llazare</a>
+ * @version $Revision: 1.17 $, $Date: 2014/04/11 04:17:23 $, $Author: cfiser $
+ */
+//TODO implement Validator clas
+
+public class Validator implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
+  public static void main(String[] args) {
+
+    //System.out.println(cnpValidator("1900216250580"));
+    // System.out.println(numeValidator(""));
+    //System.out.println(numarExemplareValidator("2 1"));
+    //System.out.println(esteNumarTelefonValid("0766745675"));
+    //System.out.println(esteGol(" s"));
+    //System.out.println(suntEgale(new Carte("3ssf", "sss", 1), "3ssf   ", "ss"));
+  }
+
+  public static boolean suntEgale(Carte c, String titluCarte, String numeAutor) {
+    if (eliminaSpatii(c.getAutor()).equals(eliminaSpatii(numeAutor)) && eliminaSpatii(c.getTitlu()).equals(eliminaSpatii(titluCarte))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static String eliminaSpatii(String str) {
+    return str.trim().replace(" ", "");
+  }
+
+  public static boolean stringulEsteGol(String string) {
+    string = string.trim();
+    if ("".equals(string)) {
+      return true;
+    }
+    return false;
+  }
+
+  public static boolean esteCnpValid(String cnp) {
+    if (cnp.length() == 13 && cnp.matches("[0-9]+")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static boolean esteNumeValid(String nume) {
+    nume = nume.trim();
+    if (nume.matches("[a-zA-Z ]+") && nume.length() >= 3) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static boolean esteNrExemplareInt(String numarExemplare) {
+    numarExemplare = numarExemplare.trim();
+    if (numarExemplare.matches("[0-9]+")) {
+      return true;
+    }
+    return false;
+  }
+
+  public static boolean esteNumarTelefonValid(String numarTelefon) {
+    numarTelefon = numarTelefon.trim();
+    if (numarTelefon.matches("[0-9+]+") && numarTelefon.length() == 10) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static boolean esteAdresaValida(String adresa) {
+    adresa = adresa.trim();
+    if (adresa.length() > 4) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static boolean existaUsername(String username) {
+    return Biblioteca.getInstance().existaUsername(username);
+  }
+
+  public static boolean existaCarte(String titlu, String autor) {
+    return Biblioteca.getInstance().existaCarte(titlu, autor);
+  }
+
+  public static boolean existaCNP(String cnp) {
+    for (MembruInregistrat m : Biblioteca.getInstance().getMembriiInregistrati()) {
+      if (m.getCnp().equals(cnp)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean existaIdExemplar(String idExemplar) {
+    //    Carte c = Biblioteca.getInstance().getCarteDupaTitluSiAutor(titlu, autor);
+    for (Carte c : Biblioteca.getInstance().getCarti()) {
+      for (Exemplar e : c.getExemplare())
+        if (e.getIdUnic().equals(idExemplar)) {
+          return true;
+        }
+    }
+    return false;
+  }
+
+}

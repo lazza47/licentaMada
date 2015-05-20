@@ -1,0 +1,823 @@
+/*
+ * Copyright (c) 2014 SSI Schaefer Noell GmbH
+ *
+ * $Header: /data/cvs/Scolarizare/Team1/Biblioteca1/src/com/ssn/team1/biblioteca1/MeniuFunctii.java,v 1.39 2014/04/11 08:50:57 cfiser Exp $
+ */
+
+package com.ssn.team1.biblioteca1;
+
+import java.util.ArrayList;
+
+/**
+ * @author <a href="mailto:amihai@ssi-schaefer-noell.com">amihai</a>
+ * @version $Revision: 1.39 $, $Date: 2014/04/11 08:50:57 $, $Author: cfiser $
+ */
+
+public class MeniuFunctii extends Meniu {
+
+  private static String cnp;
+
+  public static void login() {
+    String username;
+    String password;
+    boolean inputValid;
+    while (true) {
+
+      do {
+
+        System.out.print("  >username: ");
+        username = scanner.nextLine();
+        System.out.print("  >password: ");
+        password = scanner.nextLine();
+        inputValid = !Validator.stringulEsteGol(username) && !Validator.stringulEsteGol(password);
+        if (!inputValid) {
+          System.out.println(" ! camp GOL");
+        }
+      } while (!inputValid);
+      utilizator = biblioteca.getUtililizatorDupaNumeUtilizatorSiParola(username, password);
+      if (utilizator == null) {
+        System.out.println(" ! username sau password GRESIT");
+      } else {
+        utilizator.meniu();
+      }
+    }
+  }
+
+  public static void operatiuniPersonale() {
+    MembruInregistrat membru = (MembruInregistrat) utilizator;
+    System.out.println();
+    membru.afiseazaIstoricOperatiuniPersonale();
+    utilizator.meniu();
+  }
+
+  public static void cautareCarte() {
+    while (true) {
+      System.out.println(header);
+      System.out.println("   0.[..]");
+      System.out.println("   1.Cauta dupa titlu");
+      System.out.println("   2.Cauta dupa autor");
+      System.out.print(footer);
+
+      String choice = scanner.nextLine();
+
+      switch (choice) {
+        case "0":
+          utilizator.meniu();
+          break;
+        case "1":
+          MeniuFunctii.cautareTitlu();
+          break;
+        case "2":
+          MeniuFunctii.cautareAutor();
+          break;
+        default:
+          System.out.println(" ! input GRESIT");
+      }
+    }
+  }
+
+  public static void cautareTitlu() {
+    String titlu;
+    boolean inputValid;
+    do {
+      System.out.print("  >titlu: ");
+      titlu = scanner.nextLine();
+      inputValid = !Validator.stringulEsteGol(titlu);
+      if (!inputValid) {
+        System.out.println(" ! camp GOL");
+      }
+    } while (!inputValid);
+    ArrayList<Carte> carti = utilizator.cautaCartiDupaTitlu(titlu);
+
+    if (carti.isEmpty()) {
+      System.out.println(" ! 0 rezultate");
+    } else {
+      for (Carte carte : carti) {
+        System.out.println(carte);
+      }
+
+    }
+    utilizator.meniu();
+  }
+
+  public static void cautareAutor() {
+    String autor;
+    boolean inputValid;
+    do {
+      System.out.print("  >autor: ");
+      autor = scanner.nextLine();
+      inputValid = !Validator.stringulEsteGol(autor);
+      if (!inputValid) {
+        System.out.println(" ! camp GOL");
+      }
+    } while (!inputValid);
+    ArrayList<Carte> carti = utilizator.cautaCartiDupaAutor(autor);
+
+    if (carti.isEmpty()) {
+      System.out.println(" ! 0 rezultate");
+    } else {
+      for (Carte carte : carti) {
+        System.out.println(carte);
+      }
+
+    }
+    utilizator.meniu();
+  }
+
+  //  public static void imprumutareCarte() {
+  //    while (true) {
+  //      System.out.println(header);
+  //      System.out.println("   0.[..]");
+  //      System.out.println("   1.Varianta idUnic");
+  //      System.out.println("   2.Varianta cautare");
+  //      System.out.print(footer);
+  //
+  //      String choice = scanner.nextLine();
+  //
+  //      switch (choice) {
+  //        case "0":
+  //          utilizator.meniu();
+  //          break;
+  //        case "1":
+  //          MeniuFunctii.imprumutareCarte1();
+  //          break;
+  //        case "2":
+  //          MeniuFunctii.imprumutareCarte2();
+  //          break;
+  //        default:
+  //          System.out.println(" ! input GRESIT");
+  //      }
+  //    }
+  //
+  //  }
+
+  public static void imprumutareCarte1() {
+    String username = "";
+    boolean userValid = false;
+    while (!userValid) {
+      System.out.print("  >username: ");
+      username = scanner.nextLine();
+
+      UtilizatorSimplu utilizator1 = biblioteca.getMembruInregistratByNumeUtilizator(username);
+      if (utilizator1 == null) {
+        System.out.println(" ! username GRESIT");
+      } else {
+        userValid = true;
+      }
+    }
+    String idUnic = "";
+    boolean idValid = false;
+    while (!idValid) {
+      System.out.print("  >idUnic: ");
+      idUnic = scanner.nextLine();
+
+      if (Validator.existaIdExemplar(idUnic)) {
+        idValid = true;
+      } else {
+        System.out.println(" ! Exemplarul nu exista");
+      }
+
+    }
+
+    Administrator admin = (Administrator) utilizator;
+
+    admin.imprumutaCarte(username, idUnic);
+    utilizator.meniu();
+
+  }
+
+  public static void returnareCarte() {
+    while (true) {
+      System.out.println(header);
+      System.out.println("   0.[..]");
+      System.out.println("   1.Varianta idUnic");
+      System.out.println("   2.Varianta mai buna :)");
+      System.out.print(footer);
+
+      String choice = scanner.nextLine();
+
+      switch (choice) {
+        case "0":
+          utilizator.meniu();
+          break;
+        case "1":
+          MeniuFunctii.returnareCarte1();
+          break;
+        case "2":
+          MeniuFunctii.returnareCarte2();
+          break;
+        default:
+          System.out.println(" ! input GRESIT");
+      }
+    }
+
+  }
+
+  public static void returnareCarte1() {
+
+    String username = "";
+    boolean userValid = false;
+    while (!userValid) {
+      System.out.print("  >username: ");
+      username = scanner.nextLine();
+
+      UtilizatorSimplu membru = biblioteca.getMembruInregistratByNumeUtilizator(username);
+      if (membru == null) {
+        System.out.println(" ! username GRESIT");
+      } else {
+        userValid = true;
+      }
+    }
+    System.out.print("  >exemplar: ");
+    String exemplar = scanner.nextLine();
+    Administrator admin = (Administrator) utilizator;
+
+    admin.returneazaCarte(username, exemplar);
+    System.out.println(mesaj);
+
+    utilizator.meniu();
+
+  }
+
+  //  private static void back() {
+  //    while (true) {
+  //      System.out.println(linie);
+  //      System.out.println("   0.[inapoi]");
+  //      System.out.print(footer);
+  //
+  //      String choice = scanner.nextLine();
+  //
+  //      switch (choice) {
+  //        case "0":
+  //          utilizator.meniu();
+  //          break;
+  //        default:
+  //          System.out.println(" ! input GRESIT");
+  //      }
+  //    }
+  //  }
+
+  public static void adaugareCarte() {
+    boolean totulOK = true;
+    String titlu;
+    String numeAutor;
+
+    String[] mesaje = {
+    /**/" ! numele cartii nu poate fi null",
+    /**/" ! autorul cartii nu poate fi null" };
+
+    totulOK = true;
+
+    System.out.print("  >titlu: ");
+    titlu = scanner.nextLine();
+    System.out.print("  >autor: ");
+    numeAutor = scanner.nextLine();
+    if (Validator.existaCarte(titlu, numeAutor)) {
+      System.out.println(" ! cartea exista");
+      return;
+    }
+
+    boolean[] suntValide = {
+    /**/Validator.stringulEsteGol(titlu),
+    /**/Validator.stringulEsteGol(numeAutor) };
+    for (int i = 0; i < mesaje.length; i++) {
+      totulOK = totulOK && suntValide[i];
+      if (suntValide[i]) {
+        System.out.println(mesaje[i]);
+      }
+    }
+
+    if (totulOK) {
+      return;
+    }
+    //TODO validare
+    Administrator admin = (Administrator) utilizator;
+    admin.adaugaCarte(titlu, numeAutor);
+    System.out.println(" ! Carte adaugata cu succes");
+    utilizator.meniu();
+  }
+
+  public static void adaugareExemplare() {
+    boolean totulOK;
+    String titlu;
+    String numeAutor;
+    String numarExemplare;
+    String idUnic = "";
+
+    String[] mesaje = {
+    /**/" ! cartea nu exista",
+    /**/" ! numar incorect" };
+    do {
+      totulOK = true;
+      if (!totulOK) {
+        System.out.println();
+        System.out.println(" ! Reintroduceti datele corect");
+      }
+      System.out.print("  >titlu: ");
+      titlu = scanner.nextLine();
+      System.out.print("  >autor: ");
+      numeAutor = scanner.nextLine();
+      System.out.print("  >numar: ");
+      numarExemplare = scanner.nextLine();
+      //      if (!Validator.existaCarte(titlu, numeAutor)) {
+      //        System.out.println(" ! nu exista cartea");
+      //        return;
+      //      }
+      //      System.out.print("  >idUnic: ");
+      //      idUnic = scanner.nextLine();
+
+      boolean[] suntValide = {
+      /**/Validator.existaCarte(titlu, numeAutor),
+      /**/Validator.esteNrExemplareInt(numarExemplare) };
+      for (int i = 0; i < suntValide.length; i++) {
+        totulOK = totulOK && suntValide[i];
+        if (!suntValide[i]) {
+          System.out.println(mesaje[i]);
+        }
+      }
+    } while (!totulOK);
+    for (int i = 0; i < Integer.parseInt(numarExemplare); i++) {
+
+      do {
+        totulOK = true;
+        //      if (!totulOK) {
+        //        System.out.println();
+        //        //System.out.println(" ! Reintroduceti datele corect");
+        //      }
+        //      System.out.print("  >titlu: ");
+        //      titlu = scanner.nextLine();
+        //      System.out.print("  >autor: ");
+        //      numeAutor = scanner.nextLine();
+        //      System.out.print("  >numar: ");
+        //      numarExemplare = scanner.nextLine();
+        //      if (!Validator.existaCarte(titlu, numeAutor)) {
+        //        System.out.println(" ! nu exista cartea");
+        //        return;
+        //      }
+        System.out.print("  >idUnic: ");
+        idUnic = scanner.nextLine();
+        if (Validator.existaIdExemplar(idUnic)) {
+          System.out.println(" ! id-ul este folosit de o alta carte");
+          totulOK = false;
+        }
+
+        //      boolean[] suntValide = {
+        //      /**/Validator.existaCarte(titlu, numeAutor),
+        //      /**/!Validator.esteNrExemplareInt(numarExemplare) };
+        //      for (int i = 0; i < suntValide.length; i++) {
+        //        totulOK = totulOK && suntValide[i];
+        //        if (!suntValide[i]) {
+        //          System.out.println(mesaje[i]);
+        //        }
+        //      }
+      } while (!totulOK);
+
+      //TODO validare
+      Administrator admin = (Administrator) utilizator;
+      admin.adaugaNumarExemplare(titlu, numeAutor, idUnic);
+      System.out.println(" ! Exemplar adugat cu succes");
+    }
+    utilizator.meniu();
+
+  }
+
+  //  private static void adaugaExemplareManual(String titlu, String numeAutor, String numarExemplare, Administrator admin) {
+  //    if (!numarExemplare.equals("")) {
+  //      for (int i = 0; i < Integer.parseInt(numarExemplare); i++) {
+  //        boolean existaExemp = false;
+  //        String idExemplar = "";
+  //        do {
+  //
+  //          System.out.print("  >id exemplar: ");
+  //          idExemplar = scanner.nextLine();
+  //      //    existaExemp = Validator.existaIdExemplar(titlu, numeAutor, idExemplar);
+  //          if (existaExemp) {
+  //            System.out.println(" ! exista exemplar");
+  //          }
+  //        } while (existaExemp);
+  //        admin.adaugaNumarExemplare(titlu, numeAutor, idExemplar);
+  //      }
+  //      System.out.println(" ! numarul de exemplare a fost adaugat");
+  //    }
+  //  }
+
+  public static void adaugareMembru() {
+    boolean totulOK = true;
+    String adresa;
+    String numarTelefon;
+    String nume;
+    String parola;
+    String numeUtilizator;
+
+    String[] mesaje = {
+    /**/" ! username ocupat",
+    /**/" ! camp GOL",
+    /**/" ! nume invalid",
+    /**/" ! numar de telefon invalid",
+    /**/" ! adresa invalida",
+    /**/" ! cnp invalid" };
+    // do {
+    totulOK = true;
+    if (!totulOK) {
+      totulOK = true;
+      System.out.println();
+      System.out.println(" ! Reintroduceti datele corect");
+    }
+    System.out.print("  >numeUtilizator: ");
+    numeUtilizator = scanner.nextLine();
+    System.out.print("  >parola: ");
+    parola = scanner.nextLine();
+    System.out.print("  >numeComplet: ");
+    nume = scanner.nextLine();
+    System.out.print("  >numarTelefon: ");
+    numarTelefon = scanner.nextLine();
+    System.out.print("  >adresa: ");
+    adresa = scanner.nextLine();
+    System.out.print("  >cnp: ");
+    cnp = scanner.nextLine();
+
+    boolean[] suntValide = {
+    /**/!Validator.existaUsername(numeUtilizator),
+    /**/!(Validator.stringulEsteGol(parola) && Validator.stringulEsteGol(nume) && Validator.stringulEsteGol(cnp) && Validator.stringulEsteGol(adresa)),
+    /**/Validator.esteNumeValid(nume),
+    /**/Validator.esteNumarTelefonValid(numarTelefon),
+    /**/Validator.esteAdresaValida(adresa),
+    /**/Validator.esteCnpValid(cnp) };
+    for (int i = 0; i < mesaje.length; i++) {
+      totulOK = totulOK && suntValide[i];
+      if (!suntValide[i]) {
+        System.out.println(mesaje[i]);
+      }
+    }
+    //} while (!totulOK);
+    if (!totulOK) {
+      return;
+    }
+
+    Administrator admin = (Administrator) utilizator;
+    admin.adaugaMembru(numeUtilizator, nume, parola, numarTelefon, adresa, cnp);
+    utilizator.meniu();
+  }
+
+  public static void solicitariInregistrare() {
+
+    Administrator admin = (Administrator) utilizator;
+    ArrayList<MembruNeinregistrat> solicitari = Biblioteca.getInstance().getSolicitariInregistrare();
+
+    for (MembruNeinregistrat membru : solicitari) {
+
+      while (true) {
+        System.out.println(membru);
+        System.out.println(linie);
+        System.out.println("   0.[..]");
+        System.out.println("   1.Aproba solicitare");
+        System.out.println("   2.Refuza  solicitare");
+        System.out.print(footer);
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+          case "0":
+            utilizator.meniu();
+            break;
+          case "1":
+            admin.aprobaSolicitare(membru);
+            System.out.println(" ! " + membru.getNumeUtilizator() + " a fost adaugat");
+            utilizator.meniu();
+
+            break;
+          case "2":
+            admin.refuzaSolicitare(membru);
+            System.out.println(" ! " + membru.getNumeUtilizator() + " a fost respins");
+            utilizator.meniu();
+            break;
+          default:
+            System.out.println(" ! input GRESIT");
+        }
+      }
+    }
+  }
+
+  public static void statistici() {
+    Administrator admin = (Administrator) utilizator;
+    admin.afiseazaStatisticiCartiNereturnateLaTimp();
+    while (true) {
+      System.out.println(linie);
+      System.out.println("   0.[..]");
+      System.out.println("   1.Exporta(csv)");
+      System.out.print(footer);
+
+      String choice = scanner.nextLine();
+
+      switch (choice) {
+        case "0":
+          utilizator.meniu();
+          break;
+        case "1":
+          admin.exportaInfoInCSv();
+          System.out.println(" ! Fisierul a fost creat");
+          utilizator.meniu();
+          break;
+        default:
+          System.out.println(" ! input GRESIT");
+      }
+    }
+  }
+
+  public static void operatiuniTotale() {
+    Administrator admin = (Administrator) utilizator;
+    admin.afiseazaIstoricOperatiuniTotale();
+    utilizator.meniu();
+
+  }
+
+  public static void inregistrare() {
+    boolean totulOK = true;
+    String adresa;
+    String numarTelefon;
+    String nume;
+    String parola;
+    String numeUtilizator;
+
+    String[] mesaje = {
+    /**/" ! username ocupat",
+    /**/" ! camp parola GOL",
+    /**/" ! nume invalid",
+    /**/" ! numar de telefon invalid",
+    /**/" ! adresa invalida",
+    /**/" ! cnp invalid" };
+    do {
+      totulOK = true;
+      if (!totulOK) {
+
+        System.out.println();
+        System.out.println(" ! Reintroduceti datele corect");
+      }
+      System.out.print("  >numeUtilizator: ");
+      numeUtilizator = scanner.nextLine();
+      System.out.print("  >parola: ");
+      parola = scanner.nextLine();
+      System.out.print("  >numeComplet: ");
+      nume = scanner.nextLine();
+      System.out.print("  >numarTelefon: ");
+      numarTelefon = scanner.nextLine();
+      System.out.print("  >adresa: ");
+      adresa = scanner.nextLine();
+      System.out.print("  >cnp: ");
+      cnp = scanner.nextLine();
+
+      boolean[] suntValide = {
+      /**/!Validator.existaUsername(numeUtilizator),
+      /**/!Validator.stringulEsteGol(parola),
+      /**/Validator.esteNumeValid(nume),
+      /**/Validator.esteNumarTelefonValid(numarTelefon),
+      /**/Validator.esteAdresaValida(adresa),
+      /**/Validator.esteCnpValid(cnp) };
+      for (int i = 0; i < mesaje.length; i++) {
+        totulOK = totulOK && suntValide[i];
+        if (!suntValide[i]) {
+          System.out.println(mesaje[i]);
+        }
+      }
+    } while (!totulOK);
+
+    Guest guest = (Guest) utilizator;
+    guest.solicitInregistrare(numeUtilizator, nume, parola, numarTelefon, cnp, adresa);
+    System.out.println("   Solicitarea a fost trimisa ");
+    utilizator.meniu();
+
+  }
+
+  //  public static void imprumutareCarte2() {
+  //    String username = "";
+  //    boolean userValid = false;
+  //    while (!userValid) {
+  //      System.out.print("  >username: ");
+  //      username = scanner.nextLine();
+  //
+  //      UtilizatorSimplu utilizator1 = biblioteca.getMembruInregistratByNumeUtilizator(username);
+  //      if (utilizator1 == null) {
+  //        System.out.println(" ! username GRESIT");
+  //      } else {
+  //        userValid = true;
+  //      }
+  //    }
+  //    if (!biblioteca.getMembruInregistratByNumeUtilizator(username).esteEligibilSaImprumute()) {
+  //      //System.out.println(" ! userul nu este eligibil de imprumut");
+  //      utilizator.meniu();
+  //    }
+  //
+  //    String titlu;
+  //    boolean inputValid;
+  //    do {
+  //      System.out.print("  >titlu: ");
+  //      titlu = scanner.nextLine();
+  //      inputValid = !Validator.stringulEsteGol(titlu);
+  //      if (!inputValid) {
+  //        System.out.println(" ! camp GOL");
+  //      }
+  //    } while (!inputValid);
+  //    ArrayList<Carte> carti = utilizator.cautaCartiDupaTitlu(titlu);
+  //
+  //    if (carti.isEmpty()) {
+  //      System.out.println(" ! 0 rezultate");
+  //      utilizator.meniu();
+  //    } else {
+  //      for (int i = 0; i < carti.size(); i++) {
+  //        System.out.println("   " + (i + 1) + "." + carti.get(i));
+  //      }
+  //
+  //      while (true) {
+  //        //System.out.println(linie);
+  //        //System.out.println("   0.[inapoi]");
+  //        //System.out.print(footer);
+  //
+  //        String choice = scanner.nextLine();
+  //        if ("0".equals(choice)) {
+  //          return;
+  //        }
+  //
+  //        if (Validator.esteNrExemplareInt(choice) && Integer.valueOf(choice) <= carti.size() && Integer.valueOf(choice) > 0) {
+  //          //          if ("0".equals(choice)) {
+  //          //            utilizator.meniu();
+  //          //            return;
+  //          //          } else {
+  //          Carte carte = carti.get(Integer.valueOf(choice) - 1);
+  //          Administrator admin = (Administrator) utilizator;
+  //
+  //          admin.imprumutaCarte(username, carte.getTitlu(), carte.getAutor());
+  //          utilizator.meniu();
+  //          //          }
+  //        } else {
+  //          System.out.println(" ! input GRESIT");
+  //        }
+  //
+  //      }
+  //
+  //    }
+  //
+  //  }
+
+  public static void returnareCarte2() {
+    String username = "";
+    UtilizatorSimplu utilizator1 = null;
+    boolean userValid = false;
+    while (!userValid) {
+      System.out.print("  >username: ");
+      username = scanner.nextLine();
+
+      utilizator1 = biblioteca.getMembruInregistratByNumeUtilizator(username);
+      if (utilizator1 == null) {
+        System.out.println(" ! username GRESIT");
+      } else {
+        userValid = true;
+      }
+    }
+    //TODO sa adaugi functia in utilizator simplu
+    ArrayList<Exemplar> cartiImprumutate = null;
+    if (utilizator1 instanceof Administrator) {
+      Administrator admin = (Administrator) utilizator1;
+      cartiImprumutate = admin.getCartiImprumutate();
+    }
+    if (utilizator1 instanceof MembruInregistrat) {
+      MembruInregistrat membru = (MembruInregistrat) utilizator1;
+      cartiImprumutate = membru.getCartiImprumutate();
+    }
+
+    if (cartiImprumutate.isEmpty()) {
+      System.out.println(" ! nu sunt carti imprumutate");
+      utilizator.meniu();
+    } else {
+      for (int i = 0; i < cartiImprumutate.size(); i++) {
+        System.out.println("   " + (i + 1) + "." + cartiImprumutate.get(i));
+      }
+
+      while (true) {
+        System.out.println(linie);
+        System.out.println("   0.[inapoi]");
+        System.out.print(footer);
+
+        String choice = scanner.nextLine();
+        if ("0".equals(choice)) {
+
+          return;
+        }
+        if (Validator.esteNrExemplareInt(choice) && Integer.valueOf(choice) <= cartiImprumutate.size() && Integer.valueOf(choice) > 0) {
+
+          Exemplar exemplar = cartiImprumutate.get(Integer.valueOf(choice) - 1);
+          Administrator admin = (Administrator) utilizator;
+
+          admin.returneazaCarte(username, exemplar.getIdUnic());
+          System.out.println("Cartea " + exemplar.getIdUnic() + " a fost returnata ");
+          utilizator.meniu();
+
+        } else {
+          System.out.println(" ! input GRESIT");
+        }
+
+      }
+
+    }
+
+  }
+
+  public static void informatiiMembru() {
+    String username = "";
+    boolean userValid = false;
+    while (!userValid) {
+      System.out.print("  >username: ");
+      username = scanner.nextLine();
+
+      UtilizatorSimplu utilizator1 = biblioteca.getMembruInregistratByNumeUtilizator(username);
+      if (utilizator1 == null) {
+        System.out.println(" ! username GRESIT");
+      } else {
+        userValid = true;
+      }
+    }
+    Administrator admin = (Administrator) utilizator;
+    admin.afiseazaInformatiiDespreMembru(username);
+    utilizator.meniu();
+
+  }
+
+  public static void adaugareUtilizator() {
+    while (true) {
+      System.out.println(linie);
+      System.out.println("   0.[..]");
+      System.out.println("   1.Adauga membru");
+      System.out.println("   2.Adauga administrtor");
+      System.out.print(footer);
+
+      String choice = scanner.nextLine();
+
+      switch (choice) {
+        case "0":
+          utilizator.meniu();
+          break;
+        case "1":
+          adaugareMembru();
+
+          break;
+        case "2":
+          adaugareAdmin();
+          break;
+        default:
+          System.out.println(" ! input GRESIT");
+      }
+    }
+
+  }
+
+  private static void adaugareAdmin() {
+    boolean totulOK = true;
+    String adresa;
+    String numarTelefon;
+    String nume;
+    String parola;
+    String numeUtilizator;
+
+    String[] mesaje = {
+    /**/" ! username ocupat",
+    /**/" ! camp GOL",
+    /**/" ! nume invalid",
+    /**/" ! numar de telefon invalid",
+    /**/};
+    // do {
+    totulOK = true;
+    if (!totulOK) {
+      totulOK = true;
+      System.out.println();
+      System.out.println(" ! Reintroduceti datele corect");
+    }
+    System.out.print("  >numeUtilizator: ");
+    numeUtilizator = scanner.nextLine();
+    System.out.print("  >parola: ");
+    parola = scanner.nextLine();
+    System.out.print("  >numeComplet: ");
+    nume = scanner.nextLine();
+    System.out.print("  >numarTelefon: ");
+    numarTelefon = scanner.nextLine();
+
+    boolean[] suntValide = {
+    /**/!Validator.existaUsername(numeUtilizator),
+    /**/!(Validator.stringulEsteGol(parola) && Validator.stringulEsteGol(nume)),
+    /**/Validator.esteNumeValid(nume),
+    /**/Validator.esteNumarTelefonValid(numarTelefon) };
+    for (int i = 0; i < mesaje.length; i++) {
+      totulOK = totulOK && suntValide[i];
+      if (!suntValide[i]) {
+        System.out.println(mesaje[i]);
+      }
+    }
+    //} while (!totulOK);
+    if (!totulOK) {
+      return;
+    }
+
+    Administrator admin = (Administrator) utilizator;
+    admin.adaugaAdministrator(numeUtilizator, parola, nume, numarTelefon);
+    System.out.println(" ! Adminul a fost adugat ");
+    utilizator.meniu();
+  }
+}
